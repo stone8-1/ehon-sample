@@ -14,8 +14,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
+      padding: 40px 20px;
     }
 
     h1 {
@@ -37,7 +36,7 @@
       background: white;
       border-radius: 24px;
       padding: 36px;
-      max-width: 560px;
+      max-width: 620px;
       width: 100%;
       box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     }
@@ -61,10 +60,7 @@
       outline: none;
     }
 
-    input:focus, select:focus, textarea:focus {
-      border-color: #fcb69f;
-    }
-
+    input:focus, select:focus, textarea:focus { border-color: #fcb69f; }
     textarea { height: 80px; resize: none; }
 
     button {
@@ -86,10 +82,22 @@
       box-shadow: 0 8px 28px rgba(161,196,253,0.5);
     }
 
-    .book {
-      margin-top: 32px;
-      display: none;
+    /* 起承転結バッジ */
+    .chapter-label {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
     }
+    .ki  { background: #e0f7e9; color: #2e7d32; }
+    .sho { background: #fff3e0; color: #e65100; }
+    .ten { background: #fce4ec; color: #c62828; }
+    .ke  { background: #e8eaf6; color: #283593; }
+
+    .book { margin-top: 32px; display: none; }
 
     .book-cover {
       background: linear-gradient(135deg, #667eea, #764ba2);
@@ -97,30 +105,57 @@
       padding: 32px;
       color: white;
       text-align: center;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
     }
-
     .book-cover .emoji { font-size: 4rem; margin-bottom: 12px; }
     .book-cover h2 { font-size: 1.6rem; margin-bottom: 6px; }
-    .book-cover p { opacity: 0.85; font-size: 0.9rem; }
+    .book-cover p  { opacity: 0.85; font-size: 0.9rem; }
 
-    .pages { display: flex; flex-direction: column; gap: 12px; }
+    /* 章ヘッダー */
+    .chapter-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0 12px;
+    }
+    .chapter-header .ch-badge {
+      font-size: 1.4rem;
+      font-weight: 900;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ch-ki  { background: #e0f7e9; color: #2e7d32; }
+    .ch-sho { background: #fff3e0; color: #e65100; }
+    .ch-ten { background: #fce4ec; color: #c62828; }
+    .ch-ke  { background: #e8eaf6; color: #283593; }
+    .chapter-header .ch-title { font-weight: 700; font-size: 1rem; color: #444; }
+    .chapter-header .ch-desc  { font-size: 0.8rem; color: #999; }
+
+    .pages { display: flex; flex-direction: column; gap: 10px; }
 
     .page {
       background: #fafafa;
-      border-left: 4px solid #fcb69f;
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 16px 20px;
       font-size: 0.95rem;
       color: #444;
-      line-height: 1.7;
+      line-height: 1.8;
       animation: fadeIn 0.4s ease forwards;
       opacity: 0;
     }
+    .page.ki  { border-left: 4px solid #66bb6a; }
+    .page.sho { border-left: 4px solid #ffa726; }
+    .page.ten { border-left: 4px solid #ef5350; }
+    .page.ke  { border-left: 4px solid #5c6bc0; }
 
     .page-num {
-      font-size: 0.75rem;
-      color: #aaa;
+      font-size: 0.72rem;
+      color: #bbb;
       margin-bottom: 4px;
       font-weight: 600;
     }
@@ -136,13 +171,7 @@
       border-radius: 16px;
       padding: 24px;
     }
-
-    .steps h3 {
-      font-size: 1rem;
-      color: #667eea;
-      margin-bottom: 16px;
-    }
-
+    .steps h3 { font-size: 1rem; color: #667eea; margin-bottom: 16px; }
     .step-item {
       display: flex;
       align-items: flex-start;
@@ -151,7 +180,6 @@
       font-size: 0.9rem;
       color: #555;
     }
-
     .step-num {
       background: #667eea;
       color: white;
@@ -163,6 +191,25 @@
       justify-content: center;
       font-size: 0.75rem;
       font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .legend {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: #666;
+    }
+    .legend-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
       flex-shrink: 0;
     }
   </style>
@@ -178,13 +225,19 @@
     <label>🧒 主人公の名前</label>
     <input type="text" id="hero" placeholder="例：ミナ" />
 
+    <label>👫 友達・仲間の名前</label>
+    <input type="text" id="friend" placeholder="例：小さなドラゴンのリュウ" />
+
+    <label>😈 立ちはだかる困難・敵</label>
+    <input type="text" id="obstacle" placeholder="例：闇の霧が森を覆っている" />
+
     <label>🎨 舞台・世界観</label>
     <input type="text" id="world" placeholder="例：魔法の森" />
 
     <label>💬 伝えたいメッセージ</label>
     <textarea id="message" placeholder="例：失敗しても諦めなければ夢は叶う"></textarea>
 
-    <button onclick="generate()">✨ 絵本の構成を生成する</button>
+    <button onclick="generate()">✨ 絵本の構成を生成する（30ページ）</button>
 
     <div class="book" id="book">
       <div class="book-cover">
@@ -192,6 +245,14 @@
         <h2 id="bookTitle"></h2>
         <p id="bookSub"></p>
       </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#66bb6a"></div>起（はじまり）</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ffa726"></div>承（ひろがり）</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ef5350"></div>転（やまば）</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#5c6bc0"></div>結（おわり）</div>
+      </div>
+
       <div class="pages" id="pages"></div>
     </div>
 
@@ -205,26 +266,62 @@
   </div>
 
   <script>
-    const stories = [
-      "{hero}は{world}のはずれに住む、ちょっと臆病な子でした。",
-      "ある朝、{hero}は不思議な光る石を見つけました。",
-      "石を持つと、{world}の声が聞こえてきました。「助けて…」",
-      "{hero}は怖かったけれど、勇気を出して森の奥へ進みました。",
-      "そこには、翼をケガした小さなドラゴンがいました。",
-      "{hero}は丁寧にドラゴンの翼を包んであげました。",
-      "ドラゴンは涙を流して「ありがとう」と言いました。",
-      "二人は{world}を一緒に歩き、たくさんのことを話しました。",
-      "夕暮れ、ドラゴンの翼は治り、空へと飛び立ちました。",
-      "{hero}は笑顔で手を振りました。「また来るよ！」",
-      "家に帰った{hero}の心には、温かいものが灯っていました。",
-      "—{message}—",
+    // 起承転結 × 30ページ構成
+    // {hero} {friend} {obstacle} {world} {message} をテンプレートに使用
+    const structure = [
+      // ── 起（1〜8ページ）：主人公の日常・世界の紹介 ──
+      { chapter: 'ki', text: "{hero}は{world}のはずれにある小さな家に暮らしていました。" },
+      { chapter: 'ki', text: "{world}はとても美しく、朝になると色とりどりの光が木々の間からさしこんできます。" },
+      { chapter: 'ki', text: "でも{hero}には、ずっと気になっていることがありました。" },
+      { chapter: 'ki', text: "「わたしには、何もとくいなことがない」と、{hero}はいつも思っていたのです。" },
+      { chapter: 'ki', text: "ある日の朝、{hero}が川のほとりを歩いていると、草むらから小さな声が聞こえました。" },
+      { chapter: 'ki', text: "のぞいてみると、そこには{friend}がいました。足をケガして、動けなくなっています。" },
+      { chapter: 'ki', text: "「だいじょうぶ？」と{hero}は声をかけました。{friend}はおびえた目で{hero}を見つめました。" },
+      { chapter: 'ki', text: "{hero}はそっとかたわらにすわり、やさしく話しかけました。やがて{friend}は少しだけ笑いました。" },
+
+      // ── 承（9〜17ページ）：冒険の始まり・関係が深まる ──
+      { chapter: 'sho', text: "二人は仲よくなり、毎日いっしょに{world}を探検するようになりました。" },
+      { chapter: 'sho', text: "{friend}は{world}のことをなんでも知っていました。{hero}は目をかがやかせて話を聞きました。" },
+      { chapter: 'sho', text: "「あの山のむこうには、星の花が咲いているんだ」と{friend}が言いました。" },
+      { chapter: 'sho', text: "{hero}は「いつか一緒に見にいこう！」と約束しました。{friend}は大きくうなずきました。" },
+      { chapter: 'sho', text: "しかしある夜、{world}に異変が起きました。{obstacle}。" },
+      { chapter: 'sho', text: "次の朝、{world}はすっかり変わってしまっていました。花も光も、どこかに消えてしまったのです。" },
+      { chapter: 'sho', text: "「どうしよう…」と{hero}はふるえました。{friend}も不安そうに{hero}を見つめています。" },
+      { chapter: 'sho', text: "「このままではいけない」と{hero}は思いました。でも、何をすればいいのかわかりません。" },
+      { chapter: 'sho', text: "村のお年寄りは言いました。「{world}の中心にある古い泉を見つければ、きっと道が開ける」" },
+
+      // ── 転（18〜24ページ）：最大の試練・葛藤・乗り越え ──
+      { chapter: 'ten', text: "二人は泉を探して{world}の奥へと進みました。道は険しく、何度も迷いそうになります。" },
+      { chapter: 'ten', text: "途中、大きな岩がふさがっていました。{hero}の力では、どうしても動きません。" },
+      { chapter: 'ten', text: "{hero}はくやしくて、涙がこぼれました。「やっぱりわたしには何もできない……」" },
+      { chapter: 'ten', text: "すると{friend}が言いました。「ちがう。きみはいつも、あきらめずに考えつづけている。それがすごいんだ」" },
+      { chapter: 'ten', text: "{hero}は立ち上がりました。よく見ると、岩のそばに細いすき間がありました。" },
+      { chapter: 'ten', text: "二人で力を合わせると、すき間から光がさしこんできました。道がひらけたのです！" },
+      { chapter: 'ten', text: "ようやくたどり着いた泉は、すっかりにごっていました。{hero}は泉に向かって、心の中で願いました。" },
+
+      // ── 結（25〜30ページ）：解決・成長・しめくくり ──
+      { chapter: 'ke', text: "すると泉がゆっくりとかがやきはじめ、{world}全体に光がもどってきました。" },
+      { chapter: 'ke', text: "花が咲き、鳥が歌い、{world}はもとの美しさをとりもどしました。" },
+      { chapter: 'ke', text: "{hero}と{friend}は、約束していた星の花を、ついに一緒に見ることができました。" },
+      { chapter: 'ke', text: "{hero}はそのとき気がつきました。「とくいなことなんてなくていい。あきらめないことが、わたしの力だったんだ」" },
+      { chapter: 'ke', text: "{friend}は{hero}の手をにぎりました。「また一緒に冒険しよう」。二人はほほえみあいました。" },
+      { chapter: 'ke', text: "〜 {message} 〜" },
     ];
 
+    const chapterInfo = {
+      ki:  { label: '起', desc: 'はじまり（1〜8ページ）',  cls: 'ch-ki' },
+      sho: { label: '承', desc: 'ひろがり（9〜17ページ）', cls: 'ch-sho' },
+      ten: { label: '転', desc: 'やまば（18〜24ページ）',  cls: 'ch-ten' },
+      ke:  { label: '結', desc: 'おわり（25〜30ページ）',  cls: 'ch-ke' },
+    };
+
     function generate() {
-      const theme = document.getElementById('theme').value || '勇気ある冒険';
-      const hero  = document.getElementById('hero').value  || '主人公';
-      const world = document.getElementById('world').value || '魔法の森';
-      const msg   = document.getElementById('message').value || '勇気を出せばきっと大丈夫';
+      const theme    = document.getElementById('theme').value    || '勇気ある冒険';
+      const hero     = document.getElementById('hero').value     || '主人公のミナ';
+      const friend   = document.getElementById('friend').value   || '小さなドラゴンのリュウ';
+      const obstacle = document.getElementById('obstacle').value || '突然、闇の霧が森を包んだ';
+      const world    = document.getElementById('world').value    || '魔法の森';
+      const msg      = document.getElementById('message').value  || 'あきらめなければ、夢は必ず叶う';
 
       document.getElementById('bookTitle').textContent = `「${theme}」`;
       document.getElementById('bookSub').textContent   = `主人公：${hero}　舞台：${world}`;
@@ -232,16 +329,38 @@
       const pagesEl = document.getElementById('pages');
       pagesEl.innerHTML = '';
 
-      stories.forEach((tmpl, i) => {
-        const text = tmpl
-          .replace(/{hero}/g, hero)
-          .replace(/{world}/g, world)
-          .replace(/{message}/g, msg);
+      let lastChapter = null;
+      let pageNum = 0;
+
+      structure.forEach((item, i) => {
+        // 章の切り替わりにヘッダーを挿入
+        if (item.chapter !== lastChapter) {
+          const info = chapterInfo[item.chapter];
+          const header = document.createElement('div');
+          header.className = 'chapter-header';
+          header.innerHTML = `
+            <div class="ch-badge ${info.cls}">${info.label}</div>
+            <div>
+              <div class="ch-title">${info.label}（${['起','承','転','結'].indexOf(info.label)+1}/4）</div>
+              <div class="ch-desc">${info.desc}</div>
+            </div>
+          `;
+          pagesEl.appendChild(header);
+          lastChapter = item.chapter;
+        }
+
+        pageNum++;
+        const text = item.text
+          .replace(/{hero}/g,     hero)
+          .replace(/{friend}/g,   friend)
+          .replace(/{obstacle}/g, obstacle)
+          .replace(/{world}/g,    world)
+          .replace(/{message}/g,  msg);
 
         const div = document.createElement('div');
-        div.className = 'page';
-        div.style.animationDelay = `${i * 80}ms`;
-        div.innerHTML = `<div class="page-num">ページ ${i + 1}</div>${text}`;
+        div.className = `page ${item.chapter}`;
+        div.style.animationDelay = `${i * 60}ms`;
+        div.innerHTML = `<div class="page-num">ページ ${pageNum}</div>${text}`;
         pagesEl.appendChild(div);
       });
 
