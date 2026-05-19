@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI絵本メーカー</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #a1c4fd 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: #fff;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 32px;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 36px;
+      max-width: 560px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e8e8e8;
+      border-radius: 12px;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #fcb69f;
+    }
+
+    textarea { height: 80px; resize: none; }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #fcb69f, #a1c4fd);
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 20px rgba(161,196,253,0.4);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(161,196,253,0.5);
+    }
+
+    .book {
+      margin-top: 32px;
+      display: none;
+    }
+
+    .book-cover {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 16px;
+      padding: 32px;
+      color: white;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .book-cover .emoji { font-size: 4rem; margin-bottom: 12px; }
+    .book-cover h2 { font-size: 1.6rem; margin-bottom: 6px; }
+    .book-cover p { opacity: 0.85; font-size: 0.9rem; }
+
+    .pages { display: flex; flex-direction: column; gap: 12px; }
+
+    .page {
+      background: #fafafa;
+      border-left: 4px solid #fcb69f;
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-size: 0.95rem;
+      color: #444;
+      line-height: 1.7;
+      animation: fadeIn 0.4s ease forwards;
+      opacity: 0;
+    }
+
+    .page-num {
+      font-size: 0.75rem;
+      color: #aaa;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .steps {
+      margin-top: 32px;
+      background: #f0f4ff;
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .steps h3 {
+      font-size: 1rem;
+      color: #667eea;
+      margin-bottom: 16px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .step-num {
+      background: #667eea;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>📖 AI絵本メーカー</h1>
+  <p class="subtitle">テーマを入力して、あなただけの絵本を作ろう</p>
+
+  <div class="card">
+    <label>📌 絵本のテーマ</label>
+    <input type="text" id="theme" placeholder="例：勇気ある少女の冒険" />
+
+    <label>🧒 主人公の名前</label>
+    <input type="text" id="hero" placeholder="例：ミナ" />
+
+    <label>🎨 舞台・世界観</label>
+    <input type="text" id="world" placeholder="例：魔法の森" />
+
+    <label>💬 伝えたいメッセージ</label>
+    <textarea id="message" placeholder="例：失敗しても諦めなければ夢は叶う"></textarea>
+
+    <button onclick="generate()">✨ 絵本の構成を生成する</button>
+
+    <div class="book" id="book">
+      <div class="book-cover">
+        <div class="emoji">📚</div>
+        <h2 id="bookTitle"></h2>
+        <p id="bookSub"></p>
+      </div>
+      <div class="pages" id="pages"></div>
+    </div>
+
+    <div class="steps">
+      <h3>🛠 実際にAIで絵本を作る手順</h3>
+      <div class="step-item"><div class="step-num">1</div><span>Claude / ChatGPT でストーリーを生成</span></div>
+      <div class="step-item"><div class="step-num">2</div><span>Midjourney / DALL-E でイラストを生成</span></div>
+      <div class="step-item"><div class="step-num">3</div><span>Canva でレイアウトを組む</span></div>
+      <div class="step-item"><div class="step-num">4</div><span>PDF に出力して完成・共有</span></div>
+    </div>
+  </div>
+
+  <script>
+    const stories = [
+      "{hero}は{world}のはずれに住む、ちょっと臆病な子でした。",
+      "ある朝、{hero}は不思議な光る石を見つけました。",
+      "石を持つと、{world}の声が聞こえてきました。「助けて…」",
+      "{hero}は怖かったけれど、勇気を出して森の奥へ進みました。",
+      "そこには、翼をケガした小さなドラゴンがいました。",
+      "{hero}は丁寧にドラゴンの翼を包んであげました。",
+      "ドラゴンは涙を流して「ありがとう」と言いました。",
+      "二人は{world}を一緒に歩き、たくさんのことを話しました。",
+      "夕暮れ、ドラゴンの翼は治り、空へと飛び立ちました。",
+      "{hero}は笑顔で手を振りました。「また来るよ！」",
+      "家に帰った{hero}の心には、温かいものが灯っていました。",
+      "—{message}—",
+    ];
+
+    function generate() {
+      const theme = document.getElementById('theme').value || '勇気ある冒険';
+      const hero  = document.getElementById('hero').value  || '主人公';
+      const world = document.getElementById('world').value || '魔法の森';
+      const msg   = document.getElementById('message').value || '勇気を出せばきっと大丈夫';
+
+      document.getElementById('bookTitle').textContent = `「${theme}」`;
+      document.getElementById('bookSub').textContent   = `主人公：${hero}　舞台：${world}`;
+
+      const pagesEl = document.getElementById('pages');
+      pagesEl.innerHTML = '';
+
+      stories.forEach((tmpl, i) => {
+        const text = tmpl
+          .replace(/{hero}/g, hero)
+          .replace(/{world}/g, world)
+          .replace(/{message}/g, msg);
+
+        const div = document.createElement('div');
+        div.className = 'page';
+        div.style.animationDelay = `${i * 80}ms`;
+        div.innerHTML = `<div class="page-num">ページ ${i + 1}</div>${text}`;
+        pagesEl.appendChild(div);
+      });
+
+      const book = document.getElementById('book');
+      book.style.display = 'block';
+      book.scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
